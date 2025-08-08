@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -11,12 +10,12 @@ const fs = require('fs');
 const app = express();
 
 // ---------------- Middleware ----------------
-// Allow your Vercel frontend to call the backend
 app.use(cors({
-  origin: "https://online-code-editor-three-mu.vercel.app", // your frontend URL
+  origin: process.env.FRONTEND_URL || "https://online-code-editor-three-mu.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
 app.use(bodyParser.json());
 
 // Rate limiting to prevent abuse
@@ -24,7 +23,7 @@ app.use(
   '/run',
   rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 30, // max requests per minute
+    max: 30,
     message: { error: 'Too many requests, please try again later.' }
   })
 );
