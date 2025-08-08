@@ -6,6 +6,8 @@ const axios = require('axios');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
+import cors from "cors"; // or const cors = require("cors");
+
 
 const app = express();
 
@@ -22,6 +24,12 @@ app.use(
     message: { error: 'Too many requests, please try again later.' }
   })
 );
+
+app.use(cors({
+  origin: "https://online-code-editor-three-mu.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 // ---------------- Config ----------------
 const JUDGE0_API =
@@ -95,7 +103,10 @@ app.post('/run', async (req, res) => {
 });
 
 // ---------------- Server ----------------
+require('dotenv').config();
+
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
